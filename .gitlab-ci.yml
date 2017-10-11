@@ -1,0 +1,39 @@
+variables:
+  COMPOSER_CACHE_DIR: ".cache/composer"
+
+stages:
+  - test
+  - deploy
+
+.template: &template
+  before_script:
+    - composer install --prefer-source
+  cache:
+    key: composer
+    path:
+      - .cache
+      - vendor
+
+.test:template: &test:template
+  <<: *template
+  stage: test
+  script:
+    - vendor/bin/phpunit --color-always
+
+test:php7.0:
+  <<: *test:template
+  image: php:7.0
+
+test:php7.1:
+  <<: *test:template
+  image: php:7.1
+
+test:php7.2
+  <<: *test:template
+  image: php:7.2
+
+deploy:packagist:
+  script:
+    - curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=eater&apiToken='"$PACKAGIST_API_TOKEN" -d'{"repository":{"url":"https://packagist.org/packages/eater/shoarma"}}'
+  only:
+    - master
