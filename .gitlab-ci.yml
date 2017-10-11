@@ -14,22 +14,22 @@ stages:
       - .cache
       - vendor
 
-.test:template: &test:template
+.test:template: &test_template
   <<: *template
   stage: test
   script:
     - vendor/bin/phpunit --color-always
 
 test:php7.0:
-  <<: *test:template
+  <<: *test_template
   image: php:7.0
 
 test:php7.1:
-  <<: *test:template
+  <<: *test_template
   image: php:7.1
 
-test:php7.2
-  <<: *test:template
+test:php7.2:
+  <<: *test_template
   image: php:7.2
 
 deploy:packagist:
