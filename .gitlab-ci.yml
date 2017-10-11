@@ -10,7 +10,7 @@ stages:
     - composer install --prefer-source
   cache:
     key: composer
-    path:
+    paths:
       - .cache
       - vendor
 
