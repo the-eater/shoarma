@@ -3,7 +3,6 @@
 
 namespace Shoarma;
 
-
 use Shoarma\Wrap\Inside;
 
 class Wrap
@@ -17,7 +16,8 @@ class Wrap
         $this->wrapper = $wrapper;
     }
 
-    public static function create(callable $call, callable $wrapper): Wrap {
+    public static function create(callable $call, callable $wrapper): Wrap
+    {
         return new Wrap($call, $wrapper);
     }
 

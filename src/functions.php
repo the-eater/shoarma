@@ -16,13 +16,15 @@ if (! function_exists('Shoarma\fun')) {
      * @return \Closure
      * @throws Scope if not allowed to call from this scope
      */
-    function fun($object, $method): \Closure {
-        return deepFun($object, $method,3);
+    function fun($object, $method): \Closure
+    {
+        return deepFun($object, $method, 3);
     }
 }
 
 if (! function_exists('Shoarma\this')) {
-    function this($method): \Closure {
+    function this($method): \Closure
+    {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
         $trace = $backtrace[1];
 
@@ -41,7 +43,8 @@ if (! function_exists('Shoarma\partial')) {
      * @return callable|Partial
      * @throws Scope if not allowed to call from this scope
      */
-    function partial($call, $arguments): callable {
+    function partial($call, $arguments): callable
+    {
         return Partial::create($call, $arguments);
     }
 }
@@ -52,19 +55,22 @@ if (! function_exists('Shoarma\wrap')) {
      * @param $wrapper
      * @return Wrap
      */
-    function wrap($call, $wrapper): Wrap  {
+    function wrap($call, $wrapper): Wrap
+    {
         return Wrap::create($call, $wrapper);
     }
 }
 
 if (! function_exists('Shoarma\arg')) {
-    function arg($offset): Argument {
+    function arg($offset): Argument
+    {
         return new Range($offset, 1);
     }
 }
 
 if (! function_exists('Shoarma\args')) {
-    function args($offset, $length = null): Argument {
+    function args($offset, $length = null): Argument
+    {
         return new Range($offset, $length);
     }
 }
@@ -79,7 +85,8 @@ if (! function_exists('Shoarma\deepFun')) {
      * @return \Closure
      * @throws Scope if not allowed to call from this scope
      */
-    function deepFun($object, $method, $depth): \Closure {
+    function deepFun($object, $method, $depth): \Closure
+    {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($method);
 
@@ -99,7 +106,8 @@ if (! function_exists('Shoarma\getCallerClass')) {
      * @param int $deep
      * @return string|null
      */
-    function getCallerClass($deep): ?string {
+    function getCallerClass($deep): ?string
+    {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $deep + 1);
         $trace = $backtrace[$deep];
         if (!isset($trace['class'])) {
@@ -118,9 +126,10 @@ if (! function_exists('Shoarma\isAllowedToCall')) {
      * @param string|null $callerClassName
      * @return bool
      */
-    function isAllowedToCall(ReflectionMethod $method, ?string $callerClassName): bool {
+    function isAllowedToCall(ReflectionMethod $method, ?string $callerClassName): bool
+    {
         // Is public function, everyone may call it
-        if($method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
+        if ($method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
             return true;
         }
 
@@ -138,7 +147,7 @@ if (! function_exists('Shoarma\isAllowedToCall')) {
 
         // private functions may only be called from it's own class
         // that check failed in the previous if
-        if($method->getModifiers() & ReflectionMethod::IS_PRIVATE) {
+        if ($method->getModifiers() & ReflectionMethod::IS_PRIVATE) {
             return false;
         }
 
@@ -159,7 +168,8 @@ if (! function_exists('Shoarma\getParentClasses')) {
      * @param string $className
      * @return string[]
      */
-    function getParentClasses(string $className): array {
+    function getParentClasses(string $className): array
+    {
         $class = new \ReflectionClass($className);
         $parent = $class;
         $classNames = [];

@@ -3,7 +3,6 @@
 
 namespace Shoarma;
 
-
 use Shoarma\Partial\Argument;
 
 class Partial
@@ -23,7 +22,8 @@ class Partial
      * @param callable $call
      * @param Argument[] $predefinedArguments
      */
-    public function __construct(callable $call, $predefinedArguments) {
+    public function __construct(callable $call, $predefinedArguments)
+    {
         $this->call = $call;
         $this->predefinedArguments = $predefinedArguments;
     }
@@ -33,7 +33,8 @@ class Partial
      * @param mixed[]|Argument[] $predefinedArguments
      * @return Partial
      */
-    public static function create(callable $call, $predefinedArguments): Partial {
+    public static function create(callable $call, $predefinedArguments): Partial
+    {
         $args = [];
         $usedArg = false;
 

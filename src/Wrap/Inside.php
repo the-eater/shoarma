@@ -3,7 +3,6 @@
 
 namespace Shoarma\Wrap;
 
-
 class Inside
 {
     /**
@@ -32,7 +31,8 @@ class Inside
      * @param array $arguments
      * @return Inside
      */
-    public static function create(callable $call, array $arguments): Inside {
+    public static function create(callable $call, array $arguments): Inside
+    {
         return new Inside($call, $arguments);
     }
 
@@ -42,7 +42,8 @@ class Inside
      * @param array ...$arguments
      * @return mixed
      */
-    public function callWith(...$arguments) {
+    public function callWith(...$arguments)
+    {
         $call = $this->call;
         return $call(...$arguments);
     }
@@ -52,7 +53,8 @@ class Inside
      *
      * @return mixed
      */
-    public function callOriginal() {
+    public function callOriginal()
+    {
         $call = $this->call;
         return $call(...$this->arguments);
     }

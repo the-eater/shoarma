@@ -3,7 +3,6 @@
 
 namespace Shoarma\Partial\Argument;
 
-
 use Shoarma\Partial\Argument;
 
 class Still implements Argument
