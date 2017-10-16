@@ -8,6 +8,12 @@ returns `\Closure`
 
 Shorthand replacement for `[$object, $method]`, will also throw when called from wrong context
 
+## `this(string $method)`
+
+returns `\Closure`
+
+Shorthand replacement for `fun($this, $method)`, via magic (`debug_backtrace`) will collect the correct this object
+
 ## `partial(callable $call, $arguments)`
 
 returns `\Shoarma\Partial`
