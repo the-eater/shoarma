@@ -20,10 +20,12 @@
         "src/functions.php"
       ]
     },
-    "require": {},
     "autoload-dev": {
       "psr-4": {
         "Shoarma\\Test\\": "test/"
-      }
+      },
+      "files": [
+        "test/Helpers/plain.php"
+      ]
     }
 }
