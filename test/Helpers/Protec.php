@@ -10,6 +10,10 @@ class Protec extends Priv
         $this->getSetter()($item);
     }
 
+    protected function thisSet($item) {
+        $this->getThisSetter()($item);
+    }
+
     protected function get() {
         return $this->getItem();
     }

@@ -10,6 +10,9 @@ use function Shoarma\getParentClasses;
 use Shoarma\Test\Helpers\Extended;
 use Shoarma\Test\Helpers\Priv;
 use Shoarma\Test\Helpers\Protec;
+use function Shoarma\Test\Helpers\unscopedFun;
+use function Shoarma\Test\Helpers\unscopedThis;
+use function Shoarma\Test\Helpers\unscopedUnsafeFun;
 use function Shoarma\wrap;
 use Shoarma\Wrap\Inside;
 
@@ -29,6 +32,16 @@ class Functions extends TestCase
         fun($class, 'set')(1);
     }
 
+    public function testFunUnscoped() {
+        $this->assertInstanceOf(\Closure::class, unscopedFun());
+    }
+
+    public function testFunUnsafeUnscopedProtected() {
+        $this->expectException(Scope::class);
+
+        unscopedUnsafeFun();
+    }
+
     public function testFun() {
         $priv = new Priv();
         $setter = $priv->getSetter();
@@ -37,8 +50,11 @@ class Functions extends TestCase
 
         $extended = new Extended();
 
+        // ->getSetter defined in Priv as public
+        $getSetter = fun($extended, 'getSetter');
+
         // ->setItem defined in Priv, ->getSetter in Priv
-        $setter = $extended->getSetter();
+        $setter = $getSetter();
         $setter(2);
         $this->assertEquals(2, $extended->getItem());
 
@@ -52,6 +68,44 @@ class Functions extends TestCase
         $set = $extended->getSet();
         $set(4);
         $this->assertEquals(4, $extended->getItem());
+    }
+
+    public function testThis() {
+        $priv = new Priv();
+        $setter = $priv->getThisSetter();
+        $setter(1);
+        $this->assertEquals(1, $priv->getItem());
+
+        $extended = new Extended();
+
+        // ->setItem defined in Priv, ->getSetter in Priv
+        $setter = $extended->getThisSetter();
+        $setter(2);
+        $this->assertEquals(2, $extended->getItem());
+
+        // ->switch defined in Extended, ->getSwitch in Extended
+        $switcher = $extended->getThisSwitch();
+
+        $this->assertEquals(2 , $switcher(3));
+        $this->assertEquals(3, $extended->getItem());
+
+        // ->set defined in Protect, ->getSet in Extended
+        $set = $extended->getThisSet();
+        $set(4);
+        $this->assertEquals(4, $extended->getItem());
+    }
+
+    public function testThisUnsafePrivate() {
+        $this->expectException(Scope::class);
+
+        $class = new Extended();
+        $class->thisUnsafeSetItem(2);
+    }
+
+    public function testUnscopedThis() {
+        $this->expectException(Scope::class);
+
+        unscopedThis();
     }
 
     public function testCalledFromClass() {

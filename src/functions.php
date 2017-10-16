@@ -21,6 +21,19 @@ if (! function_exists('Shoarma\fun')) {
     }
 }
 
+if (! function_exists('Shoarma\this')) {
+    function this($method): \Closure {
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+        $trace = $backtrace[1];
+
+        if (!isset($trace['object'])) {
+            throw Scope::thisWithoutClassScope($method);
+        }
+
+        return deepFun($trace['object'], $method, 3);
+    }
+}
+
 if (! function_exists('Shoarma\partial')) {
     /**
      * @param callable $call
@@ -45,14 +58,12 @@ if (! function_exists('Shoarma\wrap')) {
 }
 
 if (! function_exists('Shoarma\arg')) {
-
     function arg($offset): Argument {
         return new Range($offset, 1);
     }
 }
 
 if (! function_exists('Shoarma\args')) {
-
     function args($offset, $length = null): Argument {
         return new Range($offset, $length);
     }
@@ -88,9 +99,14 @@ if (! function_exists('Shoarma\getCallerClass')) {
      * @param int $deep
      * @return string|null
      */
-    function getCallerClass($deep): string {
+    function getCallerClass($deep): ?string {
         $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $deep + 1);
-        return $backtrace[$deep]['class'] ?? null;
+        $trace = $backtrace[$deep];
+        if (!isset($trace['class'])) {
+            return null;
+        }
+
+        return $trace['class'];
     }
 }
 
@@ -99,14 +115,24 @@ if (! function_exists('Shoarma\isAllowedToCall')) {
      * Checks if given class is allowed to call given method
      *
      * @param ReflectionMethod $method
-     * @param string $className
+     * @param string|null $callerClassName
      * @return bool
      */
-    function isAllowedToCall(ReflectionMethod $method, string $className): bool {
+    function isAllowedToCall(ReflectionMethod $method, ?string $callerClassName): bool {
+        // Is public function, everyone may call it
+        if($method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
+            return true;
+        }
+
+        // We have no class scope, so we may not call anything more protected than public
+        if ($callerClassName === null) {
+            return false;
+        }
+
         $declaringClass = $method->getDeclaringClass();
 
         // No matter what function this is, this is allowed
-        if ($className === $declaringClass->getName() || $method->getModifiers() & ReflectionMethod::IS_PUBLIC) {
+        if ($callerClassName === $declaringClass->getName()) {
             return true;
         }
 
@@ -117,7 +143,7 @@ if (! function_exists('Shoarma\isAllowedToCall')) {
         }
 
         // Only options left is protected, which allows it to be called from it's 'children'
-        if (in_array($declaringClass->getName(), getParentClasses($className), true)) {
+        if (in_array($declaringClass->getName(), getParentClasses($callerClassName), true)) {
             return true;
         }
 

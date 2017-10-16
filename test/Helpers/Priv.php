@@ -5,6 +5,7 @@ namespace Shoarma\Test\Helpers;
 
 
 use function Shoarma\fun;
+use function Shoarma\this;
 
 class Priv
 {
@@ -20,5 +21,9 @@ class Priv
 
     public function getSetter() {
         return fun($this, 'setItem');
+    }
+
+    public function getThisSetter() {
+        return this('setItem');
     }
 }
