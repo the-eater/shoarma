@@ -7,6 +7,7 @@ use Shoarma\Exception\Scope;
 use function Shoarma\fun;
 use function Shoarma\getCallerClass;
 use function Shoarma\getParentClasses;
+use Shoarma\Test\Helpers\Abstrac;
 use Shoarma\Test\Helpers\Extended;
 use Shoarma\Test\Helpers\Priv;
 use Shoarma\Test\Helpers\Protec;
@@ -93,6 +94,9 @@ class Functions extends TestCase
         $set = $extended->getThisSet();
         $set(4);
         $this->assertEquals(4, $extended->getItem());
+
+        $protectedChildFunction = $priv->getChildFunction();
+        $this->assertEquals(4, $protectedChildFunction());
     }
 
     public function testThisUnsafePrivate() {
@@ -114,7 +118,7 @@ class Functions extends TestCase
     }
 
     public function testGetParentClasses() {
-        $this->assertEquals([], getParentClasses(Priv::class));
+        $this->assertEquals([Abstrac::class], getParentClasses(Priv::class));
     }
 
     public function testWrap() {

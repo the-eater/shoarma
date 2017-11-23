@@ -151,8 +151,13 @@ if (! function_exists('Shoarma\isAllowedToCall')) {
             return false;
         }
 
+        $declaringClassParents = getParentClasses($declaringClass->getName());
+        $declaringClassParents[] = $declaringClass->getName();
+        $callerClassParents = getParentClasses($callerClassName);
+        $callerClassParents[] = $callerClassName;
+
         // Only options left is protected, which allows it to be called from it's 'children'
-        if (in_array($declaringClass->getName(), getParentClasses($callerClassName), true)) {
+        if (count(array_intersect($declaringClassParents, $callerClassParents)) > 0) {
             return true;
         }
 
