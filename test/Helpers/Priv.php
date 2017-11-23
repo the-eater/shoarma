@@ -3,7 +3,6 @@
 
 namespace Shoarma\Test\Helpers;
 
-
 use function Shoarma\fun;
 use function Shoarma\this;
 
@@ -11,19 +10,23 @@ class Priv extends Abstrac
 {
     private $item;
 
-    public function getItem() {
+    public function getItem()
+    {
         return $this->item;
     }
 
-    private function setItem($value) {
+    private function setItem($value)
+    {
         $this->item = $value;
     }
 
-    public function getSetter() {
+    public function getSetter()
+    {
         return fun($this, 'setItem');
     }
 
-    public function getThisSetter() {
+    public function getThisSetter()
+    {
         return this('setItem');
     }
 

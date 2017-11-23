@@ -19,31 +19,36 @@ use Shoarma\Wrap\Inside;
 
 class Functions extends TestCase
 {
-    public function testFunUnsafePrivate() {
+    public function testFunUnsafePrivate()
+    {
         $this->expectException(Scope::class);
 
         $class = new Priv();
         fun($class, 'setItem')(1);
     }
 
-    public function testFunUnsafeProtected() {
+    public function testFunUnsafeProtected()
+    {
         $this->expectException(Scope::class);
 
         $class = new Protec();
         fun($class, 'set')(1);
     }
 
-    public function testFunUnscoped() {
+    public function testFunUnscoped()
+    {
         $this->assertInstanceOf(\Closure::class, unscopedFun());
     }
 
-    public function testFunUnsafeUnscopedProtected() {
+    public function testFunUnsafeUnscopedProtected()
+    {
         $this->expectException(Scope::class);
 
         unscopedUnsafeFun();
     }
 
-    public function testFun() {
+    public function testFun()
+    {
         $priv = new Priv();
         $setter = $priv->getSetter();
         $setter(1);
@@ -62,7 +67,7 @@ class Functions extends TestCase
         // ->switch defined in Extended, ->getSwitch in Extended
         $switcher = $extended->getSwitch();
 
-        $this->assertEquals(2 , $switcher(3));
+        $this->assertEquals(2, $switcher(3));
         $this->assertEquals(3, $extended->getItem());
 
         // ->set defined in Protect, ->getSet in Extended
@@ -71,7 +76,8 @@ class Functions extends TestCase
         $this->assertEquals(4, $extended->getItem());
     }
 
-    public function testThis() {
+    public function testThis()
+    {
         $priv = new Priv();
         $setter = $priv->getThisSetter();
         $setter(1);
@@ -87,7 +93,7 @@ class Functions extends TestCase
         // ->switch defined in Extended, ->getSwitch in Extended
         $switcher = $extended->getThisSwitch();
 
-        $this->assertEquals(2 , $switcher(3));
+        $this->assertEquals(2, $switcher(3));
         $this->assertEquals(3, $extended->getItem());
 
         // ->set defined in Protect, ->getSet in Extended
@@ -99,29 +105,34 @@ class Functions extends TestCase
         $this->assertEquals(4, $protectedChildFunction());
     }
 
-    public function testThisUnsafePrivate() {
+    public function testThisUnsafePrivate()
+    {
         $this->expectException(Scope::class);
 
         $class = new Extended();
         $class->thisUnsafeSetItem(2);
     }
 
-    public function testUnscopedThis() {
+    public function testUnscopedThis()
+    {
         $this->expectException(Scope::class);
 
         unscopedThis();
     }
 
-    public function testCalledFromClass() {
+    public function testCalledFromClass()
+    {
         $this->assertEquals(self::class, getCallerClass(1));
         $this->assertNotEquals(TestCase::class, getCallerClass(1));
     }
 
-    public function testGetParentClasses() {
+    public function testGetParentClasses()
+    {
         $this->assertEquals([Abstrac::class], getParentClasses(Priv::class));
     }
 
-    public function testWrap() {
+    public function testWrap()
+    {
         $test = function ($arg) {
             return 1 + $arg;
         };
